@@ -5,8 +5,7 @@ import Header from "./Header";
 import {NavLink} from "react-router-dom";
 
 const JoinGame = () => {
-    return (
-        <div>
+    return (<div>
             <Header/>
             <header className="App-header">
                 <div className={"join-game"}>
@@ -19,12 +18,12 @@ const JoinGame = () => {
                                        color="primary"></TextField>
                         </Box>
                         <Button style={{textTransform: 'none'}} variant="contained">
-                            <NavLink style={{textDecoration: 'none' ,color:'white'}} to="/play"><Typography> Done</Typography></NavLink></Button>
+                            <NavLink style={{textDecoration: 'none', color: 'white'}}
+                                     to="/play"><Typography> Done</Typography></NavLink></Button>
                     </Grid>
                 </div>
             </header>
-        </div>
-    );
+        </div>);
 };
 
 export default JoinGame;

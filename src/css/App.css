@@ -9,7 +9,7 @@
 .App {
   text-align: center;
   background-color: #32343BFF;
-  height: 2000px;
+  height: 1080px;
 }
 
 .App-logo {
@@ -139,5 +139,12 @@ button {
 .tile:hover{
   color:#eee4da;
   opacity:0.4;
+}
+
+.score-box {
+  color: #eee4da;
+  padding-bottom: 10px;
+  justify-self: center;
+  fontWeight: 600;
 }
 
