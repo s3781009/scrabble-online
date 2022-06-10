@@ -8,7 +8,8 @@ const Tile = (props) => {
 
     return (
         <motion.div
-            whileHover={{scale: props.fromHand ? 1.2 : 1}}
+            whileHover={{scale: props.placed ? 1 : 1.3}}
+            animate={{opacity: props.placed? 0.3: 1}}
             className='Tile'
             style={{backgroundColor: props.color,}}
             onClick={() => {

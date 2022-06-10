@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {motion} from 'framer-motion';
+import tile from "./Tile";
+import {Button} from "@mui/material";
 
 const Board = (props) => {
 
@@ -8,20 +10,33 @@ const Board = (props) => {
 
 
     useEffect(() => {
-        let clonedBoard = board.slice(); //creates the clone of the state
-        clonedBoard[indexPlacement] = props.selectedTile.char;
-        setBoard(clonedBoard);
-        props.setSelectedTile({char: "", index: -1});
+        if (canPlace(indexPlacement)) {
+            let clonedBoard = board.slice(); //creates the clone of the state
+            clonedBoard[indexPlacement] = props.selectedTile.char;
+            setBoard(clonedBoard);
+            for(let i =0; i< props.hand.length;i++){
+                if (props.hand[i].char === props.selectedTile.char && i==props.selectedTile.index){
+                    props.hand[i].placed=true;
+
+                }
+            }
+            console.log(props.hand[0]);
+            props.setPlacedTiles(props.selectedTile.char);
+            props.setSelectedTile({char: "", index: -1});
+        }
     }, [indexPlacement]);
 
     const canPlace = (index) => {
         let placeable = true;
         let empty = true;
         //check if the board is empty ,if it is then the every position is placeable
-        for (const tile in board) {
-            if (tile != "") {
-                empty = false;
+        for (let i=0; i<board.length; i++) {
+            if (board[i] !==""){
+                empty=false;
             }
+        }
+        if (empty){
+            return true;
         }
         if (index > 14 && index < 210) {
             if (board[index + 1] === "" && board[index - 1] === "" && board[index + 15] === "" && board[index - 15] === "" && !empty) {

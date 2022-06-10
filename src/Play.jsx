@@ -7,13 +7,15 @@ import Hand from "./Hand";
 import {AiOutlineSwap, MdOutlineCancel, MdOutlineDoneAll} from "react-icons/all";
 import {motion} from 'framer-motion';
 import {BarLoader} from "react-spinners";
-import axios from 'axios'
 
 const Play = () => {
-    const [hand, setHand] = useState(['A', 'B', 'C', 'D', 'E']);
+    const [hand, setHand] = useState([{char: 'A', placed: false, index:0}, {char: 'A', placed: false, index:1},
+        {char: 'B', placed: false, index:2},{char: 'C', placed: false, index:3},{char: 'D', placed: false ,index:4}]);
+
+    const [placedTiles, setPlacedTiles] = useState([]);
     // const [player, setPlayer] = useState({name:'Player1', hand:hand, score:0});
 
-    const [selectedTile, setSelectedTile] = useState({char: '', index: -1});
+    const [selectedTile, setSelectedTile] = useState({char: '', index: -1,});
     const [isLoading, setLoading] = useState(true);
     const [playerTurn, setPlayerTurn] = useState(true)
     const [animateScore, setAnimateScore] = useState(false);
@@ -25,7 +27,6 @@ const Play = () => {
     };
     //websocket connection to the new game created
     //get game id on new game
-
 
 
     useEffect(() => {
@@ -48,10 +49,13 @@ const Play = () => {
                     {/*The game board and the players hands*/}
                     <Box display="flex" flexDirection="column">
                         <Board selectedTile={selectedTile} setSelectedTile={setSelectedTile}
+                               setPlacedTiles={(tile) => setPlacedTiles([...placedTiles, tile])}
+                               hand={hand}
                                tileToRemove={tileToRemove}/>
                         <Typography marginBottom="30px" marginTop="30px" color={"#eee5e9ff"}> Your hand :</Typography>
                         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-                            <Hand selectedTile={selectedTile} onClick={(i) => setSelectedTile(i)} tiles={hand}/>
+                            <Hand placedTiles={placedTiles} selectedTile={selectedTile}
+                                  onClick={(i) => {setSelectedTile(i);console.log(i);}} tiles={hand}/>
                             <Button style={{backgroundColor: "#7C7C7C", marginLeft: 100, color: "black"}}>
                                 <MdOutlineCancel size={30}/></Button>
                             <Button style={{backgroundColor: "#f3b27a", marginLeft: 30, color: "black"}}>
