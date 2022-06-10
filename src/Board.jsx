@@ -17,15 +17,30 @@ const Board = (props) => {
             for(let i =0; i< props.hand.length;i++){
                 if (props.hand[i].char === props.selectedTile.char && i==props.selectedTile.index){
                     props.hand[i].placed=true;
-
+                    props.hand[i].boardIndex=indexPlacement;
+                    props.setPlacedTiles({char: props.selectedTile.char ,boardIndex: indexPlacement});
+                    console.log(props.placedTiles);
                 }
             }
-            console.log(props.hand[0]);
-            props.setPlacedTiles(props.selectedTile.char);
+
+
             props.setSelectedTile({char: "", index: -1});
         }
     }, [indexPlacement]);
-
+    useEffect(()=>{
+        if (props.remove){
+            let clonedBoard = board.slice();
+            for (let i=0; i<props.placedTiles.length;i++){
+                for (let j=0; j<board.length;j++){
+                    if (props.placedTiles[i].boardIndex ===j){
+                        clonedBoard[j] = "";
+                    }
+                }
+            }
+            setBoard(clonedBoard);
+            props.setRemove(false);
+        }
+    }, [props.remove])
     const canPlace = (index) => {
         let placeable = true;
         let empty = true;

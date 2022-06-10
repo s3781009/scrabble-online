@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Tile from "./Tile";
 
 const Hand = (props) => {
@@ -8,7 +8,7 @@ const Hand = (props) => {
     // useEffect(()=>hand.forEach(tile=>selectedTile),[]);
     const [tiles, setTiles] = useState([]);
 
-    const tileState=() => {
+    const tileState = () => {
         for (const placedTile in props.placedTiles) {
 
             for (const tile in props.tiles) {
@@ -21,14 +21,16 @@ const Hand = (props) => {
     };
     return (
         <div style={{display: "flex", flexDirection: "row", width: 300}}>
-            {tiles ? props.tiles.map((tile, i) => <Tile index={i}
-                                                        key={i}
-                                                        placed={tile.placed}
-                                                        fromHand={true}
-                                                        selectedTile={props.selectedTile}
-                                                        color={props.selectedTile.index === i&&!props.tiles[i].placed ? '#f3b27a' : "#eee4da"}
-                                                        onClick={props.onClick}
-                                                        char={tile.char}/>) : null}
+            {tiles ? props.tiles.map((tile, i) =>
+                <Tile index={i}
+                      placed={tile.placed}
+                      key={i}
+                      fromHand={true}
+                      selectedTile={props.selectedTile}
+                      color={props.selectedTile.index === i && !props.tiles[i].placed ? '#f3b27a' : "#eee4da"}
+                      onClick={props.onClick}
+                      char={tile.char}
+                />) : null}
         </div>
     );
 };

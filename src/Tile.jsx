@@ -13,7 +13,8 @@ const Tile = (props) => {
             className='Tile'
             style={{backgroundColor: props.color,}}
             onClick={() => {
-                props.onClick(selected? {char:" ",index:-1 }:{char: props.char, index: props.index})
+                console.log(props.placed);
+                props.onClick(selected || props.placed ? {char:" ",index:-1 }:{char: props.char, index: props.index})
             }}>
             <Typography variant='h5' onClick={() => console.log(props.char)} style={{
                 alignItems: "center",

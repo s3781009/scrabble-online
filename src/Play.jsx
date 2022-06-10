@@ -9,8 +9,12 @@ import {motion} from 'framer-motion';
 import {BarLoader} from "react-spinners";
 
 const Play = () => {
-    const [hand, setHand] = useState([{char: 'A', placed: false, index:0}, {char: 'A', placed: false, index:1},
-        {char: 'B', placed: false, index:2},{char: 'C', placed: false, index:3},{char: 'D', placed: false ,index:4}]);
+    const [hand, setHand] = useState([
+        {char: 'A', placed: false, index: 0, boardIndex: -1},
+        {char: 'A', placed: false, index: 1, boardIndex: -1},
+        {char: 'B', placed: false, index: 2, boardIndex: -1},
+        {char: 'C', placed: false, index: 3, boardIndex: -1},
+        {char: 'D', placed: false, index: 4, boardIndex: -1},]);
 
     const [placedTiles, setPlacedTiles] = useState([]);
     // const [player, setPlayer] = useState({name:'Player1', hand:hand, score:0});
@@ -21,6 +25,7 @@ const Play = () => {
     const [animateScore, setAnimateScore] = useState(false);
     const [tileToRemove, setTileToRemove] = useState("");
     const [gameId, setGameId] = useState(null);
+    const [removeFromBoard, setRemoveFromBoard] = useState(false);
     const variants = {
         rotate: {rotate: [0, -30, 0], transition: {duration: 0.5}},
         stop: {y: [0, -10, 0], transition: {repeat: Infinity, repeatDelay: 3}}
@@ -48,15 +53,24 @@ const Play = () => {
                     </div>
                     {/*The game board and the players hands*/}
                     <Box display="flex" flexDirection="column">
-                        <Board selectedTile={selectedTile} setSelectedTile={setSelectedTile}
-                               setPlacedTiles={(tile) => setPlacedTiles([...placedTiles, tile])}
-                               hand={hand}
-                               tileToRemove={tileToRemove}/>
+                        <Board
+                            placedTiles = {placedTiles}
+                            selectedTile={selectedTile}
+                            setSelectedTile={setSelectedTile}
+                            remove={removeFromBoard}
+                            setRemove={(isRemoved) => setRemoveFromBoard(isRemoved)}
+                            setPlacedTiles={(tile) => setPlacedTiles([...placedTiles, tile])}
+                            hand={hand}
+                            tileToRemove={tileToRemove}/>
                         <Typography marginBottom="30px" marginTop="30px" color={"#eee5e9ff"}> Your hand :</Typography>
                         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                             <Hand placedTiles={placedTiles} selectedTile={selectedTile}
-                                  onClick={(i) => {setSelectedTile(i);console.log(i);}} tiles={hand}/>
-                            <Button style={{backgroundColor: "#7C7C7C", marginLeft: 100, color: "black"}}>
+                                  onClick={(i) => {
+                                      setSelectedTile(i);
+                                      console.log(i);
+                                  }} tiles={hand}/>
+                            <Button onClick={() => setRemoveFromBoard(true)}
+                                    style={{backgroundColor: "#7C7C7C", marginLeft: 100, color: "black"}}>
                                 <MdOutlineCancel size={30}/></Button>
                             <Button style={{backgroundColor: "#f3b27a", marginLeft: 30, color: "black"}}>
                                 <AiOutlineSwap size={30}/></Button>
