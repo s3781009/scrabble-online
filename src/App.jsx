@@ -95,33 +95,33 @@ function App() {
 
 
                 </div>
-                <motion.div initial={{opacity:0.3}} transition={{delay: 1.5,duration:1.4}} animate={{opacity:1}} style={{height: 300, width: 700, color:"#eee5e9ff", alignItems:"start", justifyContent:"start", textAlign:"start"}}>
+                <motion.div initial={{opacity:0.3}} transition={{delay: 1.5,duration:1.4}} animate={{opacity:1}} style={{height: 300, width: 600, color:"#eee5e9ff", alignItems:"start", justifyContent:"start", textAlign:"start"}}>
                     {visible}
                 </motion.div>
             </div>
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                <motion.input
-                    style={{
-                        height: 40,
-                        width: 300,
-                        fontSize: 20,
-                        font: "source code pro",
-                        borderRadius: 5,
-                        border: "none",
-                        backgroundColor: "#eee5e9ff",
-                    }}
-                    placeholder={"Enter your name to get started...."}
-                    animate={{}} type="text" onChange={(e)=>setInput(e.target.value)}></motion.input>
-                <motion.button style={{
-                    height: 45,
-                    width: 80,
-                    backgroundColor: "#f3b27a",
-                    marginLeft: 10,
-                    borderRadius: 5,
-                    border: "none"
-                }} whileHover={{scale: 1.3, opacity: 0.7}} onClick={(e)=>{setName(input);console.log(name)}}>
-                    <MdOutlineDone size={40}/>
-                </motion.button>
+                {/*<motion.input*/}
+                {/*    style={{*/}
+                {/*        height: 40,*/}
+                {/*        width: 300,*/}
+                {/*        fontSize: 20,*/}
+                {/*        font: "source code pro",*/}
+                {/*        borderRadius: 5,*/}
+                {/*        border: "none",*/}
+                {/*        backgroundColor: "#eee5e9ff",*/}
+                {/*    }}*/}
+                {/*    placeholder={"Enter your name to get started...."}*/}
+                {/*    animate={{}} type="text" onChange={(e)=>setInput(e.target.value)}></motion.input>*/}
+                {/*<motion.button style={{*/}
+                {/*    height: 45,*/}
+                {/*    width: 80,*/}
+                {/*    backgroundColor: "#f3b27a",*/}
+                {/*    marginLeft: 10,*/}
+                {/*    borderRadius: 5,*/}
+                {/*    border: "none"*/}
+                {/*}} whileHover={{scale: 1.3, opacity: 0.7}} onClick={(e)=>{setName(input);console.log(name)}}>*/}
+                {/*    <MdOutlineDone size={40}/>*/}
+                {/*</motion.button>*/}
             </div>
             <div style={{ marginTop:100}}>
                 <NavLink to={"/join"}>

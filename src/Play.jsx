@@ -54,7 +54,7 @@ const Play = () => {
                     {/*The game board and the players hands*/}
                     <Box display="flex" flexDirection="column">
                         <Board
-                            placedTiles = {placedTiles}
+                            placedTiles={placedTiles}
                             selectedTile={selectedTile}
                             setSelectedTile={setSelectedTile}
                             remove={removeFromBoard}
