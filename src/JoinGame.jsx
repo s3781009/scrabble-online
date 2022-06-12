@@ -4,8 +4,29 @@ import {motion} from 'framer-motion';
 import {MdCloudDone} from "react-icons/all";
 
 const JoinGame = () => {
-    let input = "";
-    const [gameCode, setGameCode] = useState("");
+
+    const socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
+    const [code, setCode] = useState("");
+    const [name, setName] = useState("");
+    socket.onmessage = (message) => {
+        console.log(JSON.parse(message.data));
+    };
+    socket.onerror = (err) => {
+        console.log(err);
+    };
+    const sumbitName = () => {
+        console.log("button pressed");
+        socket.onopen = () => {
+            let toSend = {
+                Connection: null, id: "", name: name, hand: null, gameCode: code, action: "join"
+            };
+            console.log(toSend);
+            socket.send(JSON.stringify(toSend));
+            console.log("sent");
+        };
+    };
+
+
     return (<div>
         <Header/>
         <div style={{
@@ -25,7 +46,7 @@ const JoinGame = () => {
                 fontSize: 30,
                 backgroundColor: "#eee5e9ff",
                 fontWeight: 700,
-            }} placeholder={"Your name..."}></motion.input>
+            }} placeholder={"Your name..."} onChange={(e) => setCode(e.target.value)}></motion.input>
             <motion.input style={{
                 marginBottom: 30,
                 width: 400,
@@ -34,16 +55,16 @@ const JoinGame = () => {
                 fontSize: 30,
                 backgroundColor: "#eee5e9ff",
                 fontWeight: 700,
-                border:'none',
-            }} placeholder={"Game code..."}></motion.input>
+                border: 'none',
+            }} placeholder={"Game code..."} onChange={(e) => setName(e.target.value)}></motion.input>
             <motion.button whileHover={{scale: 1.3, opacity: 0.5}} style={{
                 width: 200,
                 height: 60,
                 backgroundColor: "#52dee5ff",
                 borderRadius: 10,
                 border: "none"
-            }}>
-               <MdCloudDone/>
+            }} onClick={() => sumbitName()}>
+                <MdCloudDone/>
             </motion.button>
         </div>
     </div>);
