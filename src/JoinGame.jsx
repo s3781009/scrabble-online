@@ -1,31 +1,52 @@
 import React, {useState} from 'react';
-import TextField from '@mui/material/TextField'
-import {Box, Button, Grid, Typography} from "@mui/material";
 import Header from "./Header";
-import {NavLink} from "react-router-dom";
+import {motion} from 'framer-motion';
+import {MdCloudDone} from "react-icons/all";
 
 const JoinGame = () => {
     let input = "";
     const [gameCode, setGameCode] = useState("");
     return (<div>
-            <Header/>
-            <header className="App-header">
-                <div className={"join-game"}>
-                    <Box marginBottom="100px">
-                        <Typography fontSize="30px">Enter the code</Typography>
-                    </Box>
-                    <Grid display="flex" flex="row">
-                        <Box marginRight="10px" width="200px">
-                            <TextField fullWidth="200px" onChange={(e)=> setGameCode(e.target.value)} sx={{input: {color: 'white'}}} variant="filled"
-                                       color="primary"></TextField>
-                        </Box>
-                        <Button style={{textTransform: 'none'}} variant="contained" onClick={()=>{setGameCode(gameCode);console.log(gameCode)}}>
-                            <NavLink style={{textDecoration: 'none', color: 'white'}}
-                                     to="/play"><Typography> Done</Typography></NavLink></Button>
-                    </Grid>
-                </div>
-            </header>
-        </div>);
+        <Header/>
+        <div style={{
+            height: 2000,
+            backgroundColor: "#32343BFF",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "start"
+        }}>
+            <motion.input style={{
+                marginTop: 100,
+                marginBottom: 30,
+                width: 400,
+                height: 50,
+                borderRadius: 10,
+                fontSize: 30,
+                backgroundColor: "#eee5e9ff",
+                fontWeight: 700,
+            }} placeholder={"Your name..."}></motion.input>
+            <motion.input style={{
+                marginBottom: 30,
+                width: 400,
+                height: 50,
+                borderRadius: 10,
+                fontSize: 30,
+                backgroundColor: "#eee5e9ff",
+                fontWeight: 700,
+                border:'none',
+            }} placeholder={"Game code..."}></motion.input>
+            <motion.button whileHover={{scale: 1.3, opacity: 0.5}} style={{
+                width: 200,
+                height: 60,
+                backgroundColor: "#52dee5ff",
+                borderRadius: 10,
+                border: "none"
+            }}>
+               <MdCloudDone/>
+            </motion.button>
+        </div>
+    </div>);
 };
 
 export default JoinGame;
