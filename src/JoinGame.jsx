@@ -9,6 +9,7 @@ const JoinGame = () => {
     const [code, setCode] = useState("");
     const [name, setName] = useState("");
     socket.onmessage = (message) => {
+        console.log("message received");
         console.log(JSON.parse(message.data));
     };
     socket.onerror = (err) => {
@@ -46,7 +47,7 @@ const JoinGame = () => {
                 fontSize: 30,
                 backgroundColor: "#eee5e9ff",
                 fontWeight: 700,
-            }} placeholder={"Your name..."} onChange={(e) => setCode(e.target.value)}></motion.input>
+            }} placeholder={"Your name..."} onChange={(e) => setName(e.target.value)}></motion.input>
             <motion.input style={{
                 marginBottom: 30,
                 width: 400,
@@ -56,7 +57,7 @@ const JoinGame = () => {
                 backgroundColor: "#eee5e9ff",
                 fontWeight: 700,
                 border: 'none',
-            }} placeholder={"Game code..."} onChange={(e) => setName(e.target.value)}></motion.input>
+            }} placeholder={"Game code..."} onChange={(e) => setCode(e.target.value)}></motion.input>
             <motion.button whileHover={{scale: 1.3, opacity: 0.5}} style={{
                 width: 200,
                 height: 60,
