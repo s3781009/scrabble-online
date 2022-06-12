@@ -8,32 +8,29 @@ const Board = (props) => {
     const [board, setBoard] = useState(Array(15 * 15).fill(""));
     const [indexPlacement, setIndexPlacement] = useState(-1);
 
-
     useEffect(() => {
         if (canPlace(indexPlacement)) {
             let clonedBoard = board.slice(); //creates the clone of the state
             clonedBoard[indexPlacement] = props.selectedTile.char;
             setBoard(clonedBoard);
             for(let i =0; i< props.hand.length;i++){
-                if (props.hand[i].char === props.selectedTile.char && i==props.selectedTile.index){
+                if (props.hand[i].char === props.selectedTile.char && i===props.selectedTile.index){
                     props.hand[i].placed=true;
                     props.hand[i].boardIndex=indexPlacement;
-                    props.setPlacedTiles({char: props.selectedTile.char ,boardIndex: indexPlacement});
-                    console.log(props.placedTiles);
                 }
             }
-
-
             props.setSelectedTile({char: "", index: -1});
         }
     }, [indexPlacement]);
+
     useEffect(()=>{
         if (props.remove){
             let clonedBoard = board.slice();
-            for (let i=0; i<props.placedTiles.length;i++){
+            for (let i=0; i<props.hand.length;i++){
                 for (let j=0; j<board.length;j++){
-                    if (props.placedTiles[i].boardIndex ===j){
+                    if (props.hand[i].boardIndex ===j && props.hand[i].placed){
                         clonedBoard[j] = "";
+                        props.hand[i].placed = false;
                     }
                 }
             }

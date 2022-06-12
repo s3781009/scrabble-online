@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import Header from "./Header";
-import {Box} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import {PacmanLoader} from "react-spinners";
 import axios from "axios";
+import {motion} from 'framer-motion';
 
 const NewGame = () => {
 
@@ -12,11 +13,12 @@ const NewGame = () => {
     let [color, setColor] = useState("#ffffff");
     let [game, setGame] = useState(null);
     useEffect(() => {
-        axios.get("https://scrabble-web-server.herokuapp.com/new")
-            .then(res => {
-                setGame(res.data);
-                return game;
-            }).then((gameId) => console.log(gameId));
+        if (game == null) {
+            axios.get("https://scrabble-web-server.herokuapp.com/new")
+                .then(res => {
+                    setGame(res.data);
+                }).catch((e)=>console.log(e));
+        }
     }, []);
 
 
@@ -35,16 +37,21 @@ const NewGame = () => {
             <Box marginRight={5}>
                 <div style={{marginBottom: 40}}> Waiting for players to join</div>
                 Game code:
-                <div style={{color:"#f3b27a", marginTop:20}}>
+                <div style={{color: "#f3b27a", marginTop: 20}}>
                     {game !== null ? game.id : ""}
                 </div>
-                <div style={{marginTop: 40}}>
-                    Number of players joined: <br/>  1
-                </div>
-                <div style={{marginTop: 100, marginRight: 200}}>
+                {/*<div style={{marginTop: 40}}>*/}
+                {/*    Number of players joined: <br/> 1*/}
+                {/*</div>*/}
+                {/*/!*<div style={{marginTop:50}}>*!/*/}
+                {/*/!*    <motion.button transition={{duration:100, type:"spring", damping:100, stiffness:500}}>Done</motion.button>*!/*/}
+                {/*</div>*/}
+                <div style={{marginTop: 60, marginRight: 200}}>
                     <PacmanLoader color={"#f3b27a"} loading={loading} css size={100}/>
                 </div>
+
             </Box>
+
         </div>
     </div>);
 }

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import TextField from '@mui/material/TextField'
 import {Box, Button, Grid, Typography} from "@mui/material";
 import Header from "./Header";
 import {NavLink} from "react-router-dom";
 
 const JoinGame = () => {
+    let input = "";
+    const [gameCode, setGameCode] = useState("");
     return (<div>
             <Header/>
             <header className="App-header">
@@ -14,10 +16,10 @@ const JoinGame = () => {
                     </Box>
                     <Grid display="flex" flex="row">
                         <Box marginRight="10px" width="200px">
-                            <TextField fullWidth="200px" sx={{input: {color: 'white'}}} variant="filled"
+                            <TextField fullWidth="200px" onChange={(e)=> setGameCode(e.target.value)} sx={{input: {color: 'white'}}} variant="filled"
                                        color="primary"></TextField>
                         </Box>
-                        <Button style={{textTransform: 'none'}} variant="contained">
+                        <Button style={{textTransform: 'none'}} variant="contained" onClick={()=>{setGameCode(gameCode);console.log(gameCode)}}>
                             <NavLink style={{textDecoration: 'none', color: 'white'}}
                                      to="/play"><Typography> Done</Typography></NavLink></Button>
                     </Grid>
