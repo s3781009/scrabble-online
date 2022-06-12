@@ -19,6 +19,7 @@ const Board = (props) => {
                     props.hand[i].boardIndex=indexPlacement;
                 }
             }
+
             props.setSelectedTile({char: "", index: -1});
         }
     }, [indexPlacement]);

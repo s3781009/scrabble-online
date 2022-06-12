@@ -6,7 +6,7 @@ import axios from "axios";
 import {motion} from 'framer-motion';
 
 const NewGame = () => {
-    const [input,setInput] = useState("");
+    const [input, setInput] = useState("");
     const [animateInput, setAnimateInput] = useState(false);
     const [gameCode, setGameCdoe] = useState(0);
     useEffect(() => setGameCdoe(Math.floor(Math.random() * 100000000)), []);
@@ -57,7 +57,8 @@ const NewGame = () => {
             color: "white"
         }}>
             <Box marginRight={5}>
-                <div style={{marginBottom: 40}}> Waiting for players to join</div>
+                {animateInput?<motion.div animate={{opacity: !animateInput ? 0 : 1}} style={{marginBottom: 40}}> Waiting for Opponent to join
+                </motion.div>:null}
                 Game code:
                 <div style={{color: "#f3b27a", marginTop: 20}}>
                     {game !== null ? game.id : ""}
@@ -66,7 +67,8 @@ const NewGame = () => {
                     display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 50
                 }}>
                     <motion.input style={{width: 300, height: 40, fontSize: 20, fontWeight: 700}}
-                                  placeholder={"Your name..."} onChange={(e)=>setInput(e.target.value)}></motion.input>
+                                  placeholder={"Your name..."}
+                                  onChange={(e) => setInput(e.target.value)}></motion.input>
                     <motion.button style={{height: 50, width: 100, marginLeft: 20,}} onClick={() => sumbitName()}>DONE
                     </motion.button>
                 </motion.div>
@@ -77,7 +79,9 @@ const NewGame = () => {
                 {/*/!*    <motion.button transition={{duration:100, type:"spring", damping:100, stiffness:500}}>Done</motion.button>*!/*/}
                 {/*</div>*/}
                 <div style={{marginTop: 60, marginRight: 200}}>
-                    <PacmanLoader color={"#f3b27a"} loading={loading} css size={100}/>
+                    <motion.div animate={{opacity: !animateInput ? 0 : 1}}>
+                        {animateInput?<PacmanLoader color={"#f3b27a"} loading={loading} css size={100}/>:null}
+                    </motion.div>
                 </div>
 
             </Box>
