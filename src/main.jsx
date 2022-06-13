@@ -7,7 +7,7 @@ import JoinGame from "./JoinGame";
 import Play from "./Play";
 import NewGame from "./NewGame";
 
-ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode>
+ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<App/>}/>
@@ -15,5 +15,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode>
             <Route path="/join" element={<JoinGame/>}/>
             <Route path="/play" element={<Play/>}/>
         </Routes>
-    </BrowserRouter>
-</React.StrictMode>)
+    </BrowserRouter>)

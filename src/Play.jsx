@@ -7,18 +7,34 @@ import Hand from "./Hand";
 import {AiOutlineSwap, MdOutlineCancel, MdOutlineDoneAll} from "react-icons/all";
 import {motion} from 'framer-motion';
 import {BarLoader} from "react-spinners";
+import {useLocation} from "react-router";
 
 const Play = () => {
-    const [hand, setHand] = useState([
-        {char: 'A', placed: false, index: 0, boardIndex: -1},
-        {char: 'A', placed: false, index: 1, boardIndex: -1},
-        {char: 'B', placed: false, index: 2, boardIndex: -1},
-        {char: 'C', placed: false, index: 3, boardIndex: -1},
-        {char: 'D', placed: false, index: 4, boardIndex: -1},]);
+    const {state} = useLocation();
+    const {game, initiator} = state;
+    const [player, setPlayer] = useState(initiator ? game.players[0] : game.players[1]);
+    const [op, setOp] = useState(initiator ? game.players[1] : game.players[0]);
+    useEffect(() => {
+
+        console.log(initiator);
+        console.log(game);
+        if (hand.length === 0) {
+            console.log(player.hand);
+            for (let i = 0; i < player.hand.length; i++) {
+                setHand(prevState => [...prevState, {
+                    char: player.hand[i].char,
+                    placed: false,
+                    index: i,
+                    boardIndex: -1
+                }])
+            }
+        }
+    }, []);
+
+    const [hand, setHand] = useState([]);
 
     const [placedTiles, setPlacedTiles] = useState([]);
     // const [player, setPlayer] = useState({name:'Player1', hand:hand, score:0});
-
     const [selectedTile, setSelectedTile] = useState({char: '', index: -1,});
     const [isLoading, setLoading] = useState(true);
     const [playerTurn, setPlayerTurn] = useState(true)
@@ -26,12 +42,32 @@ const Play = () => {
     const [tileToRemove, setTileToRemove] = useState("");
     const [gameId, setGameId] = useState(null);
     const [removeFromBoard, setRemoveFromBoard] = useState(false);
-    const variants = {
-        rotate: {rotate: [0, -30, 0], transition: {duration: 0.5}},
-        stop: {y: [0, -10, 0], transition: {repeat: Infinity, repeatDelay: 3}}
+    const socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
+    socket.onmessage=()=>{
+
+    }
+    socket.onopen = () => {
+        let toSend = {
+            Connection: null, id: "", name: player.name, hand: null, gameCode: game.id.toString(), action: "reconnect"
+        };
+        socket.send(JSON.stringify(toSend));
     };
     //websocket connection to the new game created
     //get game id on new game
+    const placeDone = () => {
+        for (let i = 0; i < hand.length; i++) {
+            if (hand[i].placed === true) {
+
+            }
+        }
+        console.log(hand.filter((tile) => tile.placed !== true));
+        let toSend = {
+            Connection: null, id: "", name: player.name, hand: null, gameCode: game.id.toString(), action: "placedone"
+        };
+        setAnimateScore(true);
+        setPlayerTurn(false);
+    }
+
 
 
     useEffect(() => {
@@ -67,17 +103,14 @@ const Play = () => {
                             <Hand placedTiles={placedTiles} selectedTile={selectedTile}
                                   onClick={(i) => {
                                       setSelectedTile(i);
-                                      console.log(i);
                                   }} tiles={hand}/>
                             <Button onClick={() => setRemoveFromBoard(true)}
                                     style={{backgroundColor: "#7C7C7C", marginLeft: 100, color: "black"}}>
                                 <MdOutlineCancel size={30}/></Button>
                             <Button style={{backgroundColor: "#f3b27a", marginLeft: 30, color: "black"}}>
                                 <AiOutlineSwap size={30}/></Button>
-                            <Button onClick={() => {
-                                setAnimateScore(true);
-                                setPlayerTurn(false);
-                            }} style={{backgroundColor: "#f3b27a", marginLeft: 30, color: "black"}}>
+                            <Button onClick={() => placeDone()}
+                                    style={{backgroundColor: "#f3b27a", marginLeft: 30, color: "black"}}>
                                 <MdOutlineDoneAll size={30}/></Button>
                         </div>
                     </Box>
@@ -107,7 +140,7 @@ const Play = () => {
                                 font: "source code pro",
                                 fontWeight: 600,
 
-                            }}>OP
+                            }}>{op.name}
                             </div>
                             <div style={{
                                 fontWeight: 600,
@@ -134,7 +167,7 @@ const Play = () => {
                                 font: "source code pro",
                                 fontWeight: 600,
                                 paddingBottom: 10,
-                            }}>SCORE
+                            }}>{player.name}
                             </div>
                             <div style={{
                                 color: "#eee4da",
