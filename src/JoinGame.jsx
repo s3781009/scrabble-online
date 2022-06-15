@@ -21,7 +21,7 @@ const JoinGame = () => {
     };
     useEffect(() => {
         if(gameState!==null) {
-            navigate('/play', {state: {game: gameState, initiator:false, socket:socket}});
+            navigate('/play', {state: {game: gameState, initiator:false}});
         }
     }, [gameState]);
     socket.onerror = (err) => {
