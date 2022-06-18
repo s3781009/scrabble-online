@@ -7,37 +7,13 @@ import {useNavigate} from 'react-router';
 
 const JoinGame = () => {
 
-    const socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
     const [code, setCode] = useState("");
     const [name, setName] = useState("");
     const [submitted, setSubmitted] = useState(false);
-    const [players, setPlayers] = useState([])
-    const [game, setGame] = useState();
-    const [gameState, setGameState] = useState(null);
     const navigate = useNavigate();
-    socket.onmessage = (message) => {
-        console.log("message received");
-        setGameState(JSON.parse(message.data));
-    };
-    useEffect(() => {
-        if(gameState!==null) {
-            navigate('/play', {state: {game: gameState, initiator:false}});
-        }
-    }, [gameState]);
-    socket.onerror = (err) => {
-        console.log(err);
-    };
+
     const sumbitName = () => {
-        setSubmitted(true);
-        console.log("button pressed");
-        socket.onopen = () => {
-            let toSend = {
-                Connection: null, id: "", name: name, hand: null, gameCode: code, action: "join"
-            };
-            console.log(toSend);
-            socket.send(JSON.stringify(toSend));
-            console.log("sent");
-        };
+        navigate('/play', {state: {initiator: false ,gameCode:code, name:name}});
     };
 
 
@@ -77,8 +53,8 @@ const JoinGame = () => {
                 <MdCloudDone/>
             </motion.button>
             {submitted ?
-                <div style={{marginTop:30, marginRight:140, }}>
-                    <PacmanLoader  color={"#f3b27a"} size={60}/>
+                <div style={{marginTop: 30, marginRight: 140,}}>
+                    <PacmanLoader color={"#f3b27a"} size={60}/>
                 </div> : null}
         </div>
 

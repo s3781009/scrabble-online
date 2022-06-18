@@ -8,13 +8,13 @@ const Tile = (props) => {
 
     return (
         <motion.div
-            whileHover={{scale: props.placed ? 1 : 1.3}}
-            animate={{opacity: props.placed? 0.3: 1}}
+            whileHover={{scale: props.placed ||! props.turn ? 1 : 1.3}}
+            animate={{opacity: props.placed || !props.turn? 0.3: 1}}
             className='Tile'
             style={{backgroundColor: props.color,}}
             onClick={() => {
                 console.log(props.placed);
-                props.onClick(selected || props.placed ? {char:" ",index:-1 }:{char: props.char, index: props.index})
+                props.onClick(selected || props.placed ||!props.turn  ? {char:"",index:-1 }:{char: props.char, index: props.index})
             }}>
             <Typography variant='h5' onClick={() => console.log(props.char)} style={{
                 alignItems: "center",

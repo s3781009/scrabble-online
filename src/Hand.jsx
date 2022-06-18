@@ -23,6 +23,7 @@ const Hand = (props) => {
         <div style={{display: "flex", flexDirection: "row", width: 300}}>
             {tiles ? props.tiles.map((tile, i) =>
                 <Tile index={i}
+                      turn = {props.turn}
                       placed={tile.placed}
                       key={i}
                       fromHand={true}

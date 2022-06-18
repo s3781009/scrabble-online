@@ -5,34 +5,18 @@ import Header from "./Header";
 import Board from "./Board";
 import Hand from "./Hand";
 import {AiOutlineSwap, MdOutlineCancel, MdOutlineDoneAll} from "react-icons/all";
-import {motion} from 'framer-motion';
+import {motion, useTime} from 'framer-motion';
 import {BarLoader} from "react-spinners";
 import {useLocation} from "react-router";
 
 const Play = () => {
     const {state} = useLocation();
-    const {game, initiator} = state;
-    const [player, setPlayer] = useState(initiator ? game.players[0] : game.players[1]);
-    const [op, setOp] = useState(initiator ? game.players[1] : game.players[0]);
-    useEffect(() => {
-
-        console.log(initiator);
-        console.log(game);
-        if (hand.length === 0) {
-            console.log(player.hand);
-            for (let i = 0; i < player.hand.length; i++) {
-                setHand(prevState => [...prevState, {
-                    char: player.hand[i].char,
-                    placed: false,
-                    index: i,
-                    boardIndex: -1
-                }])
-            }
-        }
-    }, []);
+    const {initiator, gameCode, name} = state;
+    const [player, setPlayer] = useState(null);
+    const [op, setOp] = useState(null);
+    const [isTurn, setTurn] = useState();
 
     const [hand, setHand] = useState([]);
-
     const [placedTiles, setPlacedTiles] = useState([]);
     // const [player, setPlayer] = useState({name:'Player1', hand:hand, score:0});
     const [selectedTile, setSelectedTile] = useState({char: '', index: -1,});
@@ -41,17 +25,55 @@ const Play = () => {
     const [animateScore, setAnimateScore] = useState(false);
     const [tileToRemove, setTileToRemove] = useState("");
     const [gameId, setGameId] = useState(null);
+    const [game, setGame] = useState(null);
     const [removeFromBoard, setRemoveFromBoard] = useState(false);
-    const socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
-    socket.onmessage=()=>{
+    let socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
+    useEffect(() => {
+            socket.onopen = () => {
+                let toSend = {
+                    Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "join"
+                };
+                socket.send(JSON.stringify(toSend));
+                console.log("sent reconnect message")
+            };
+        }, []
+    );
 
-    }
     socket.onopen = () => {
+
         let toSend = {
-            Connection: null, id: "", name: player.name, hand: null, gameCode: game.id.toString(), action: "reconnect"
+            Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "reconnect"
         };
         socket.send(JSON.stringify(toSend));
+        console.log("sent reconnect message")
     };
+
+    socket.onmessage = (message) => {
+        console.log("received socket message");
+
+        if (message.data !== "pong") {
+
+            let game = JSON.parse(message.data);
+            console.log(game);
+            initiator ? setPlayer(game.players[0]) : setPlayer(game.players[1]);
+            !initiator ? setOp(game.players[0]) : setOp(game.players[1]);
+
+            setLoading(false);
+        }
+
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            let toSend = {
+                Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "ping"
+            };
+            console.log("ping");
+            socket.send(JSON.stringify(toSend));
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, []);
     //websocket connection to the new game created
     //get game id on new game
     const placeDone = () => {
@@ -60,19 +82,23 @@ const Play = () => {
 
             }
         }
+        setTurn(false);
+        console.log("place done");
         console.log(hand.filter((tile) => tile.placed !== true));
+        setHand([...hand.filter((tile) => tile.placed !== true)]);
         let toSend = {
-            Connection: null, id: "", name: player.name, hand: null, gameCode: game.id.toString(), action: "placedone"
+            Connection: null, id: "", name: player.name, hand: hand, gameCode: gameCode.toString(), action: "place"
         };
+        socket.send(JSON.stringify(toSend));
         setAnimateScore(true);
         setPlayerTurn(false);
     }
 
+    socket.onclose = () => {
+        console.log("socket closed");
+        socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
+    }
 
-
-    useEffect(() => {
-        setTimeout(() => setLoading(false), 1000);
-    }, []);
 
     return (
         <div style={{backgroundColor: "#41444d", height: 1080}}>
@@ -100,17 +126,32 @@ const Play = () => {
                             tileToRemove={tileToRemove}/>
                         <Typography marginBottom="30px" marginTop="30px" color={"#eee5e9ff"}> Your hand :</Typography>
                         <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-                            <Hand placedTiles={placedTiles} selectedTile={selectedTile}
+                            <Hand placedTiles={placedTiles} selectedTile={selectedTile} turn={playerTurn}
                                   onClick={(i) => {
                                       setSelectedTile(i);
                                   }} tiles={hand}/>
                             <Button onClick={() => setRemoveFromBoard(true)}
-                                    style={{backgroundColor: "#7C7C7C", marginLeft: 100, color: "black"}}>
+                                    style={{
+                                        backgroundColor: "#7C7C7C",
+                                        marginLeft: 100,
+                                        color: "black",
+                                        boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)"
+                                    }}>
                                 <MdOutlineCancel size={30}/></Button>
-                            <Button style={{backgroundColor: "#f3b27a", marginLeft: 30, color: "black"}}>
+                            <Button style={{
+                                backgroundColor: "#f3b27a",
+                                marginLeft: 30,
+                                color: "black",
+                                boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)"
+                            }}>
                                 <AiOutlineSwap size={30}/></Button>
                             <Button onClick={() => placeDone()}
-                                    style={{backgroundColor: "#f3b27a", marginLeft: 30, color: "black"}}>
+                                    style={{
+                                        backgroundColor: "#f3b27a",
+                                        marginLeft: 30,
+                                        color: "black",
+                                        boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)"
+                                    }}>
                                 <MdOutlineDoneAll size={30}/></Button>
                         </div>
                     </Box>
@@ -127,6 +168,7 @@ const Play = () => {
                             flexDirection: "column",
                             alignItems: "center",
                             paddingTop: 10,
+                            boxShadow: "10px 10px 2px 1px rgba(0, 0, 0, 0.2)",
                             backgroundColor: playerTurn ? "#7C7C7C" : "rgb(243, 178, 122)",
                             height: 70,
                             width: 100,
@@ -155,6 +197,7 @@ const Play = () => {
                             flexDirection: "column",
                             alignItems: "center",
                             paddingTop: 10,
+                            boxShadow: "10px 10px 2px 1px rgba(0, 0, 0, 0.2)",
                             backgroundColor: !playerTurn ? "#7C7C7C" : "#f3b27a",
                             height: 70,
                             width: 100,
@@ -165,6 +208,7 @@ const Play = () => {
                                 color: "#eee4da",
                                 justifySelf: "center",
                                 font: "source code pro",
+
                                 fontWeight: 600,
                                 paddingBottom: 10,
                             }}>{player.name}

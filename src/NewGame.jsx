@@ -12,13 +12,14 @@ const NewGame = () => {
     const [animateInput, setAnimateInput] = useState(false);
     const [loading, setLoading] = useState(true);
     const [game, setGame] = useState(null);
-    const[gameState, setGameState ] = useState(null);
+    const [gameState, setGameState] = useState(null);
     const socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(gameState!==null) {
-            navigate('/play', {state: {game: gameState, initiator:true}});
+        if (gameState !== null) {
+            socket.close();
+
         }
     }, [gameState]);
 
@@ -31,32 +32,17 @@ const NewGame = () => {
         }
     }, []);
 
-
-    socket.onmessage = (message) => {
-        console.log("received");
-        console.log(JSON.parse(message.data));
-        setGameState(JSON.parse(message.data));
-    };
-
-
-    socket.onerror = (err) => {
-        console.log(err);
-    };
-
     const sumbitName = () => {
         console.log("button pressed");
-        setAnimateInput(true);
-        socket.onopen = () => {
-            if (game !== null) {
-                let toSend = {
-                    Connection: null, id: "", name: input, hand: null, gameCode: game.id.toString(), action: "join"
-                };
-                console.log(toSend);
-                socket.send(JSON.stringify(toSend));
-                console.log("sent");
-            }
-        };
+        let playerToJoin = {state: {initiator: true, gameCode: game.id, name: input}};
+        console.log(playerToJoin);
+        navigate('/play', playerToJoin);
     };
+
+
+    socket.onclose = () => {
+        console.log("closed socket");
+    }
 
     return (<div className="App">
         <Header/>
