@@ -27,20 +27,23 @@ const Play = () => {
     const [gameId, setGameId] = useState(null);
     const [game, setGame] = useState(null);
     const [removeFromBoard, setRemoveFromBoard] = useState(false);
+    const [call, setCall] = useState(false);
     let socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
+
     useEffect(() => {
-            socket.onopen = () => {
-                let toSend = {
-                    Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "join"
+            if (player === null) {
+                socket.onopen = () => {
+                    let toSend = {
+                        Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "join"
+                    };
+                    socket.send(JSON.stringify(toSend));
+                    console.log("joined");
                 };
-                socket.send(JSON.stringify(toSend));
-                console.log("sent reconnect message")
-            };
+            }
         }, []
     );
 
     socket.onopen = () => {
-
         let toSend = {
             Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "reconnect"
         };
@@ -51,17 +54,36 @@ const Play = () => {
     socket.onmessage = (message) => {
         console.log("received socket message");
 
-        if (message.data !== "pong") {
+        if (message.data !== "pong" && isLoading) {
+            if (player === null) {
+                let game = JSON.parse(message.data);
+                if (game.id === undefined) {
+                    setHand(game);
+                    return;
+                }
+                console.log(game);
 
-            let game = JSON.parse(message.data);
-            console.log(game);
-            initiator ? setPlayer(game.players[0]) : setPlayer(game.players[1]);
-            !initiator ? setOp(game.players[0]) : setOp(game.players[1]);
-
+                initiator ? setPlayer(game.players[0]) : setPlayer(game.players[1]);
+                !initiator ? setOp(game.players[0]) : setOp(game.players[1]);
+            }
             setLoading(false);
+        }
+        else{
+            console.log(message.data);
         }
 
     };
+    useEffect(() => {
+        if (player != null) {
+            let h = [];
+            for (let i = 0; i < player.hand.length; i++) {
+                h.push(
+                    {char: player.hand[i].char, placed: false, boardIndex: -1}
+                )
+            }
+            setHand(h);
+        }
+    }, [player]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -69,36 +91,50 @@ const Play = () => {
                 Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "ping"
             };
             console.log("ping");
-            socket.send(JSON.stringify(toSend));
-        }, 2000);
+            socket.open = () => {
+                socket.send(JSON.stringify(toSend));
+            }
+        }, 1000);
 
         return () => clearInterval(interval);
     }, []);
     //websocket connection to the new game created
     //get game id on new game
     const placeDone = () => {
-        for (let i = 0; i < hand.length; i++) {
-            if (hand[i].placed === true) {
-
-            }
-        }
         setTurn(false);
         console.log("place done");
         console.log(hand.filter((tile) => tile.placed !== true));
-        setHand([...hand.filter((tile) => tile.placed !== true)]);
-        let toSend = {
-            Connection: null, id: "", name: player.name, hand: hand, gameCode: gameCode.toString(), action: "place"
-        };
-        socket.send(JSON.stringify(toSend));
-        setAnimateScore(true);
-        setPlayerTurn(false);
-    }
 
-    socket.onclose = () => {
-        console.log("socket closed");
-        socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
-    }
+        let h = hand.filter((tile) => tile.placed !== true);
+        console.log(h);
+        setHand(h);
+        setCall(!call);
 
+    }
+    useEffect(() => {
+        if (hand !== null && player !== null && hand.length < 7) {
+            socket.onopen = () => {
+                let toSend = {
+                    Connection: null,
+                    id: "",
+                    name: player.name,
+                    hand: hand,
+                    gameCode: gameCode.toString(),
+                    action: "place"
+                };
+                socket.send(JSON.stringify(toSend));
+                setAnimateScore(true);
+            }
+        }
+    }, [hand]);
+
+    // socket.onclose = () => {
+    //     console.log("socket closed");
+    //     socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
+    // }
+    socket.onerror=()=>{
+        console.log("error occured");
+    }
 
     return (
         <div style={{backgroundColor: "#41444d", height: 1080}}>
