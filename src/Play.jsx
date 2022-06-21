@@ -108,7 +108,6 @@ const Play = () => {
         let h = hand.filter((tile) => tile.placed !== true);
         console.log(h);
         setHand(h);
-        setCall(!call);
 
     }
     useEffect(() => {
@@ -120,7 +119,8 @@ const Play = () => {
                     name: player.name,
                     hand: hand,
                     gameCode: gameCode.toString(),
-                    action: "place"
+                    action: "place",
+                    board: null
                 };
                 socket.send(JSON.stringify(toSend));
                 setAnimateScore(true);
