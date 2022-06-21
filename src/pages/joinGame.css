@@ -1,0 +1,44 @@
+.join-game {
+    display: flex;
+    flex-direction: column;
+
+}
+.body{
+    height: 30%;
+    background-color: #32343BFF;
+    display: flex;
+    flex-direction: column;
+
+
+}
+.form {
+    background-color: #32343BFF;
+    display: flex;
+    flex-direction: column;
+    height: 20%;
+}
+
+.name-input {
+    width: 400px;
+    height: 50px;
+    border-radius: 10px;
+    font-size: 30px;
+    background-color: #eee5e9ff;
+    font-weight: 700;
+}
+.game-input{
+    width: 400px;
+    height: 50px;
+    border-radius: 10px;
+    font-size: 30px;
+    background-color: #eee5e9ff;
+    font-weight: 700;
+}
+.game-button{
+
+    width: 200px;
+    height: 60px;
+    background-color: #52dee5ff;
+    border-radius: 10px;
+}
+

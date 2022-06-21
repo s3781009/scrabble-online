@@ -1,15 +1,12 @@
 import {useState} from "react";
 import "./css/App.css";
-import Header from "./Header";
+import Header from "./components/Header";
 import {motion} from 'framer-motion';
-import {MdOutlineDone} from "react-icons/all";
-import Rule from "./Rule";
+import Rule from "./components/Rule";
 import {NavLink} from "react-router-dom";
 
 function App() {
     const [visible, setVisible] = useState();
-    const [input,setInput] = useState();
-    const[name, setName] = useState("");
     const [titles, setTitles] = useState(
         [{
             text: "The Scrabble Board",

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import './css/Tile.css'
+import '../css/Tile.css'
 import {Typography} from "@mui/material";
 import {motion} from "framer-motion";
 
