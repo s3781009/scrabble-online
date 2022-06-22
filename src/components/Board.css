@@ -1,0 +1,23 @@
+.grid-container{
+    display: grid;
+    width: 630px;
+    height: 630px;
+    grid-template-columns: repeat(15,auto);
+    background-color: #7c7c7cff;
+    border-radius: 6px;
+    padding: 10px;
+}
+.board-tile{
+    height: 40px;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee5e9ff;
+    border-radius: 5px;
+}
+.board-tile-char{
+    font-weight: 400;
+    font-size: 1.5rem;
+}
