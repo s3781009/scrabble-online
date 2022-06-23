@@ -10,6 +10,7 @@ import {BarLoader} from "react-spinners";
 import {useLocation} from "react-router";
 import './play.css';
 import {Message, Player} from '../../redux/PlayerSlice';
+import LeftTab from "../../components/leftTab";
 const Play = () => {
 
     const {state} = useLocation();
@@ -142,6 +143,7 @@ const Play = () => {
                 <BarLoader style={{margin: "50, 50, 50, 50"}} size={100} color={"white"}/> :
                 <div className="main">
                     <div className="words-container">
+                        <LeftTab/>
                     </div>
                     <Box display="flex" flexDirection="column">
                         <Board
