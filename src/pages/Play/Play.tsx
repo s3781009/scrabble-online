@@ -9,37 +9,58 @@ import {motion} from 'framer-motion';
 import {BarLoader} from "react-spinners";
 import {useLocation} from "react-router";
 import './play.css';
-
+import {Message, Player} from '../../redux/PlayerSlice';
 const Play = () => {
 
     const {state} = useLocation();
     const {initiator, gameCode, name} = state;
-    const [player, setPlayer] = useState(null);
-    const [op, setOp] = useState(null);
+    const [player, setPlayer] = useState<Player>(null);
+    const [op, setOp] = useState<Player>(null);
     const [isTurn, setTurn] = useState();
     const [hand, setHand] = useState([]);
     const [placedTiles, setPlacedTiles] = useState([]);
     const [selectedTile, setSelectedTile] = useState({char: '', index: -1,});
-    const [isLoading, setLoading] = useState(true);
-    const [playerTurn, setPlayerTurn] = useState(true)
-    const [animateScore, setAnimateScore] = useState(false);
-    const [removeFromBoard, setRemoveFromBoard] = useState(false);
+    const [isLoading, setLoading] = useState<boolean>(true);
+    const [playerTurn, setPlayerTurn] = useState<boolean>(true)
+    const [animateScore, setAnimateScore] = useState<boolean>(false);
+    const [removeFromBoard, setRemoveFromBoard] = useState<boolean>(false);
+    const[board, setBoard] = useState(null);
 
     let socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
 
     useEffect(() => {
         if (player === null) {
             socket.onopen = () => {
-                let toSend = {
-                    Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "join"
+
+                let toSend :Message= {
+                    Connection: null,
+                    id: "",
+                    name: name,
+                    hand: [],
+                    gameCode: gameCode.toString(),
+                    action: "join"
                 };
+
                 socket.send(JSON.stringify(toSend));
                 console.log("joined");
             };
         }
+        const interval = setInterval(() => {
+
+            let toSend = {
+                Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "ping"
+            };
+            console.log("ping");
+            socket.onopen = () => {
+                socket.send(JSON.stringify(toSend));
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
     }, []);
 
     socket.onopen = () => {
+
         let toSend = {
             Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "reconnect"
         };
@@ -80,19 +101,6 @@ const Play = () => {
         }
     }, [player]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            let toSend = {
-                Connection: null, id: "", name: name, hand: null, gameCode: gameCode.toString(), action: "ping"
-            };
-            console.log("ping");
-            socket.open = () => {
-                socket.send(JSON.stringify(toSend));
-            }
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, []);
     //websocket connection to the new game created
     //get game id on new game
     const placeDone = () => {
@@ -124,6 +132,7 @@ const Play = () => {
 
     socket.onerror = () => {
         console.log("error occured");
+        socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
     }
 
     return (

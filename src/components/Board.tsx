@@ -2,12 +2,16 @@ import React, {useEffect, useState} from 'react';
 import {motion} from 'framer-motion';
 import tile from "./Tile";
 import './Board.css';
+import {useAppDispatch, useAppSelector} from "../redux/hooks";
+import {connect} from "@giantmachines/redux-websocket";
 
 const Board = (props) => {
 
     const [board, setBoard] = useState(Array(15 * 15).fill(""));
     const [indexPlacement, setIndexPlacement] = useState(-1);
-
+    const player = useAppSelector(state=>state.player);
+    const dispatch = useAppDispatch();
+    dispatch(connect())
     useEffect(() => {
         if (canPlace(indexPlacement)) {
             let clonedBoard = board.slice(); //creates the clone of the state
@@ -83,7 +87,7 @@ const Board = (props) => {
                         className="board-tile"
                         key={index}
                         whileHover={{
-                            opacity: val === "" && canPlace() ? 0.30 : 1,
+                            opacity: val === ""  ? 0.30 : 1,
                             backgroundColor: val !== "" || canPlace(index) ? "#eee5e9ff" : "#ff0002"
                         }}
                         onClick={() => {

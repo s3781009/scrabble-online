@@ -1,10 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../api/CounterSlice';
+import {configureStore} from '@reduxjs/toolkit';
+import playerReducer from './PlayerSlice';
+import reduxWebSocket from '@giantmachines/redux-websocket';
 
-export const store =  configureStore({
+const reduxWebsocketMiddleware = reduxWebSocket();
+
+export const store = configureStore({
     reducer: {
+        player: playerReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(reduxWebsocketMiddleware)
 
-    }
+
 })
 export type RootState = ReturnType<typeof store.getState>
 

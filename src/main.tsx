@@ -6,7 +6,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import JoinGame from "./pages/JoinGame/JoinGame";
 import Play from "./pages/Play/Play";
 import NewGame from "./pages/NewGame/NewGame";
-import store from "./redux/store";
+import {store} from "./redux/store";
 import {Provider} from 'react-redux';
 
 // @ts-ignore

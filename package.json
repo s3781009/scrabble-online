@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@emotion/styled": "^11.9.3",
+    "@giantmachines/redux-websocket": "^1.5.1",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.8.5",
     "@reduxjs/toolkit": "^1.8.2",

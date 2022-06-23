@@ -4,19 +4,29 @@ import {RootState} from "./store";
 
 type Tile = {
     char: string,
-    value: number,
-    placed: boolean,
+    value?: number,
+    placed?: boolean,
     boardIndex?: number
 }
-type Player = {
+export type Message = {
+    Connection ?: any,
+    id:string,
+    name:string,
+    hand: Tile[],
+    gameCode:string,
+    action:string,
+}
+export type Player = {
     name: string,
     hand: Tile[],
+    board: Tile[],
     isTurn: boolean,
 
 }
 const initialState: Player = {
     hand:[],
     name: "",
+    board:[],
     isTurn: true,
 }
 export const PlayerSlice = createSlice({
