@@ -14,10 +14,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<App/>}/>
-                <Route path="/newgame" element={<NewGame/>}/>
-                <Route path="/join" element={<JoinGame/>}/>
-                <Route path="/play" element={<Play/>}/>
+                {/*<Route path="/" element={<App/>}/>*/}
+                {/*<Route path="/newgame" element={<NewGame/>}/>*/}
+                {/*<Route path="/join" element={<JoinGame/>}/>*/}
+                <Route path="/" element={<Play/>}/>
             </Routes>
         </BrowserRouter>
     </Provider>)

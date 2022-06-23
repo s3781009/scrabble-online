@@ -2,10 +2,11 @@ import Hand from "../components/Hand";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "./store";
 
-type Tile = {
+export type Tile = {
     char: string,
     value?: number,
     placed?: boolean,
+    index?: number,
     boardIndex?: number
 }
 export type Message = {
