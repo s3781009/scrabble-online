@@ -1,4 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import playerReducer from './PlayerSlice';
 import reduxWebSocket from '@giantmachines/redux-websocket';
 

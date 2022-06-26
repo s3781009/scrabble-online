@@ -20,9 +20,13 @@
     border: none;
     font-size: medium;
     box-shadow: 5px 5px 2px 1px rgba(0, 0, 0, 0.2);
-    margin-bottom: 10%;
+    margin-bottom: 20%;
 }
 
+.gamecode{
+    color:#f3b27a;
+    font-size: x-large;
+}
 .title {
     margin-left: 10%;
     font-size: large;
