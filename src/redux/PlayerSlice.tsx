@@ -1,6 +1,6 @@
 import Hand from "../components/Hand";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {RootState} from "./store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 
 export type Tile = {
     char: string,
@@ -10,40 +10,57 @@ export type Tile = {
     boardIndex?: number
 }
 export type Message = {
-    Connection ?: any,
-    id:string,
-    name:string,
+    Connection?: any,
+    id: string,
+    name: string,
     hand: Tile[],
-    gameCode:string,
-    action:string,
+    gameCode: string,
+    action: string,
 }
 export type Player = {
     name: string,
     hand: Tile[],
     board: Tile[],
     isTurn: boolean,
+    score: number,
+    gameCode: string,
 
 }
 const initialState: Player = {
-    hand:[],
-    name: "",
-    board:[],
+    hand: [],
+    name: "player1",
+    board: [],
+    score: 0,
     isTurn: true,
+    gameCode: "",
 }
 export const PlayerSlice = createSlice({
-    name:'Player',
+    name: 'Player',
     initialState,
     extraReducers: undefined,
     reducers: {
-        getPlayer: (state,action:PayloadAction<Player>)=>{
-            state = action.payload;
-        }
+        setPlayer: (state, action: PayloadAction<Player>) => {
+            state.hand = action.payload.hand;
+            state.name = action.payload.name;
+            state.board = action.payload.board;
+            state.isTurn = action.payload.isTurn;
+
+        },
+        setHand: (state, action: PayloadAction<Tile[]>) => {
+            state.hand = action.payload;
+        },
+        setName: (state, action: PayloadAction<string>) => {
+            state.name = action.payload;
+        },
+        setGameCode: (state, action: PayloadAction<string>) => {
+            state.gameCode = action.payload;
+        },
     }
 
 })
 
-export const {getPlayer} = PlayerSlice.actions;
+export const { setPlayer, setHand, setName, setGameCode } = PlayerSlice.actions;
 
-export const selectPlayer = (state:RootState) =>state;
+export const selectPlayer = (state: RootState) => state;
 
-export  default PlayerSlice.reducer;
+export default PlayerSlice.reducer;

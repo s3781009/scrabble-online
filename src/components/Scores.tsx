@@ -1,21 +1,24 @@
 import React from 'react';
-import {motion} from "framer-motion";
-
+import { motion } from "framer-motion";
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 const Scores = () => {
+
+    const player = useAppSelector(state => state.player);
+    const dispatch = useAppDispatch();
 
     return (
         <div className="right-container">
             <div className="op">
-                <div className="score-name">name</div>
-                <div className="score-name"> 0</div>
+                <div className="score-name">{player.name}</div>
+                <div className="score-name"> {player.score}</div>
             </div>
 
             <motion.div
                 className="current-player"
                 initial={false}
             >
-                <div className="score-name">name</div>
-                <div className="score-name"> 10</div>
+                <div className="score-name">{player.name}</div>
+                <div className="score-name"> {player.score}</div>
             </motion.div>
         </div>
     );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import New from './new';
 import './leftTab.css';
 import { motion } from 'framer-motion';
 import { AiFillPlayCircle, AiFillPlusCircle, AiOutlineArrowLeft } from 'react-icons/ai';
@@ -6,10 +7,11 @@ import { MdMeetingRoom } from 'react-icons/md';
 import { BarLoader } from 'react-spinners';
 import axios from 'axios';
 import { Button } from '@mui/material';
+import Join from './join';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { setPlayer, setHand } from '../redux/PlayerSlice';
 
-
-let socket = new WebSocket("ws://localhost:8080/join");
+let socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
 
 const LeftTab = () => {
 
@@ -19,21 +21,11 @@ const LeftTab = () => {
     const [showJoinGame, setShowJoinGame] = useState(false);
     const [name, setName] = useState<string>("");
     const [showPlayGame, setShowPlayGame] = useState(false);
-    const [gameCode, setGameCode] = useState<string>("");
 
 
     const player = useAppSelector(state => state.player);
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        if (showNewGame) {
-            axios.get("http://localhost:8080/new")
-                .then(res => {
-                    setGameCode(res.data.id);
-                    setCodeLoading(false);
-                }).catch((e) => console.log(e));
-        }
-    }, [showNewGame]);
 
     const toNewGame = () => {
         setShowButtons(false);
@@ -53,20 +45,40 @@ const LeftTab = () => {
     }
 
     socket.onmessage = (message) => {
-        console.log("received socket message");
-        console.log(message.data);
+        try {
+            let obj = JSON.parse(message.data);
+            dispatch(setHand(obj.players[0].hand));
+            console.log(obj.players[0].hand);
+        }
+        catch (e) {
+            console.log(message.data);
+        }
+
+
+
     };
 
-    const createGame = () => {
-        let toSend = {
-            Connection: null, id: "", name: "name", hand: null, gameCode: gameCode, action: "join"
-        };
-        console.log(gameCode);
-        socket.onopen = () => {
-            socket.send(JSON.stringify(toSend));
-        }
-        console.log("join game");
+
+    socket.onopen = () => {
+        console.log("socket oepned");
     }
+    socket.onclose = () => {
+        console.log("closed");
+    }
+    socket.onerror = () => {
+        console.log("error socket");
+    }
+
+    const createGame = () => {
+
+        let toSend = {
+            id: "", name: player.name, hand: null, gameCode: player.gameCode.toString(), action: "join", score: 0
+        };
+        socket.send(JSON.stringify(toSend));
+        console.log("join game");
+
+    }
+
 
     return (
         <>
@@ -105,22 +117,11 @@ const LeftTab = () => {
                         onClick={() => back()}>
                         <AiOutlineArrowLeft size={30} />
                     </motion.div>
-                    <div className="code">GAME CODE</div>
-                    <div>
-                        {codeLoading ? <BarLoader /> : <div className="gamecode">{gameCode}</div>}
-                    </div>
-                    <input className="name" placeholder="name" onChange={(event) => setName(event.target.value)}></input>
                 </>}
-                {!showJoinGame && showNewGame ? <div className="bottom-container">
-                    <div className="play-container">
-                        <Button className="play-button" onClick={() => createGame()}>
-                            <AiFillPlayCircle size={40} color={"lack"} />
-                            <div className="play-text">
-                                PLAY
-                            </div>
-                        </Button>
-                    </div>
-                </div> : null}
+                {showNewGame ? <New
+                    createGame={() => createGame()}
+                /> : null}
+                {showJoinGame ? <Join createGame={() => createGame()} /> : null}
             </div>
         </>
     );
