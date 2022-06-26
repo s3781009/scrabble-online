@@ -9,7 +9,7 @@ import axios from 'axios';
 import { Button } from '@mui/material';
 import Join from './join';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import { setPlayer, setHand } from '../redux/PlayerSlice';
+import { setPlayer, setHand, Tile } from '../redux/PlayerSlice';
 
 let socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
 
@@ -47,8 +47,12 @@ const LeftTab = () => {
     socket.onmessage = (message) => {
         try {
             let obj = JSON.parse(message.data);
+            let hand: Tile[] = [];
+            obj.players[0].hand.forEach((element: Tile) => {
+                hand.push({ char: element.char, placed: false })
+            });
             dispatch(setHand(obj.players[0].hand));
-            console.log(obj.players[0].hand);
+            console.log(player.hand);
         }
         catch (e) {
             console.log(message.data);

@@ -14,13 +14,9 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const Play = () => {
 
-    const [player, setPlayer] = useState<Player>({ board: [], hand: [], isTurn: false, name: "" });
-    const [op, setOp] = useState<Player>({ board: [], hand: [], isTurn: false, name: "" });
+
     const user = useAppSelector(state => state.player)
     const dispatch = useAppDispatch()
-    const [placedTiles, setPlacedTiles] = useState<Tile[]>([]);
-    const [selectedTile, setSelectedTile] = useState<Tile>({ char: '', index: -1, });
-    const [removeFromBoard, setRemoveFromBoard] = useState<boolean>(false);
 
     let socket = new WebSocket("wss://scrabble-web-server.herokuapp.com/join");
     let gameCode = "";
@@ -38,21 +34,10 @@ const Play = () => {
                 <Box display="flex" flexDirection="column">
 
                     <Board
-                        placedTiles={placedTiles}
-                        selectedTile={selectedTile}
-                        setSelectedTile={setSelectedTile}
-                        remove={removeFromBoard}
-                        setRemove={(isRemoved: boolean) => setRemoveFromBoard(isRemoved)}
-                        setPlacedTiles={(tile: Tile) => {
-                            setPlacedTiles([...placedTiles, tile]);
-                        }}
                     />
 
                     <div className="player-actions">
                         <Hand
-                            placedTiles={placedTiles}
-                            selectedTile={selectedTile}
-                            onClick={(i: Tile) => setSelectedTile(i)}
                         />
                         <PlayerActions />
                     </div>

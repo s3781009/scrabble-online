@@ -4,7 +4,7 @@ import './Hand.css';
 
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 
-const Hand = (props) => {
+const Hand = () => {
 
     const player = useAppSelector(state => state.player);
     const dispatch = useAppDispatch();
@@ -12,12 +12,8 @@ const Hand = (props) => {
         <div className="hand-container">
             {player.hand.map((tile, i) =>
                 <Tile index={i}
-                    turn={props.turn}
-                    placed={tile.placed}
                     key={i}
-                    selectedTile={props.selectedTile}
-                    color={props.selectedTile.index === i && !props.tiles[i].placed ? '#f3b27a' : "#eee4da"}
-                    onClick={props.onClick}
+                    color={player.selectedTile === i && !player.hand[i].placed ? '#f3b27a' : "#eee4da"}
                     char={tile.char}
                 />)}
         </div>
