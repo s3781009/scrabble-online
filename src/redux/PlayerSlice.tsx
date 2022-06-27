@@ -25,6 +25,7 @@ export type Player = {
     score: number,
     gameCode: string,
     selectedTile?: Tile,
+    placedTiles: Tile[],
 
 }
 const initialState: Player = {
@@ -35,6 +36,7 @@ const initialState: Player = {
     isTurn: true,
     gameCode: "",
     selectedTile: { char: "", index: -1 },
+    placedTiles: [],
 }
 export const PlayerSlice = createSlice({
     name: 'Player',
@@ -61,13 +63,19 @@ export const PlayerSlice = createSlice({
             state.selectedTile = action.payload;
         },
         setPlacedTile: (state, action: PayloadAction<Tile>) => {
-            state.selectedTile = action.payload;
+            state.placedTiles.push(action.payload);
+        },
+        setPlacedHand: (state, action: PayloadAction<number>) => {
+            state.hand[action.payload].placed = true;
+        },
+        removeFromHand: (state, action: PayloadAction<number>) => {
+            state.hand.splice(action.payload, 1);
         },
     }
 
 })
 
-export const { setPlayer, setHand, setName, setGameCode, setSelectedTile } = PlayerSlice.actions;
+export const { setPlayer, setHand, setName, setGameCode, setSelectedTile, setPlacedHand, removeFromHand } = PlayerSlice.actions;
 
 export const selectPlayer = (state: RootState) => state;
 
